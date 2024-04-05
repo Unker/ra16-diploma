@@ -8,9 +8,9 @@ const NotFoundPage = () => {
   return (
     <>
       <h1>Error 404. Page not found</h1>
-      <i 
+      <i
         onClick={() => navigate(MAIN_PAGE_ROUTE)}
-        style={{cursor: 'pointer'}}
+        style={{ cursor: 'pointer' }}
       >
         На главную
       </i>

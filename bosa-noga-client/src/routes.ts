@@ -5,10 +5,12 @@ import ContactsPage from './pages/ContactsPage';
 import ProductPage from './pages/ProductPage';
 import CartPage from './pages/CartPage';
 import { MAIN_PAGE_ROUTE, CATALOG_ROUTE, ABOUT_ROUTE, CONTACTS_ROUTE, PRODUCT_ROUTE, CART_ROUTE } from './utils/consts';
-import { RouteConfig } from 'react-router-dom';
+interface PublicRoute {
+  path: string;
+  component: React.ComponentType<any>;
+}
 
-
-export const publicRoutes: RouteConfig[] = [
+export const publicRoutes: PublicRoute[] = [
   {
     path: MAIN_PAGE_ROUTE,
     component: MainPage,
