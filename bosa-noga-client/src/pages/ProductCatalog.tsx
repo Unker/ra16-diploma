@@ -1,7 +1,5 @@
-const ProductCatalog = () => {
-  return (
+const ProductCatalog = () => (
     <div>ProductCatalog</div>
-  )
-}
+);
 
 export default ProductCatalog;

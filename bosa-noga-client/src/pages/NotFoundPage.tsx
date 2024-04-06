@@ -1,9 +1,9 @@
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
 
-import { MAIN_PAGE_ROUTE } from "../utils/consts.ts";
+import { MAIN_PAGE_ROUTE } from '../utils/consts';
 
 const NotFoundPage = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   return (
     <>
@@ -15,7 +15,7 @@ const NotFoundPage = () => {
         На главную
       </i>
     </>
-  )
-}
+  );
+};
 
-export default NotFoundPage
+export default NotFoundPage;

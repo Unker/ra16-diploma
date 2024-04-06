@@ -1,7 +1,5 @@
-const ProductPage = () => {
-  return (
+const ProductPage = () => (
     <div>ProductPage</div>
-  )
-};
+);
 
 export default ProductPage;
