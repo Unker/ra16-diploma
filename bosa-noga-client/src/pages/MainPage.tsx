@@ -1,4 +1,4 @@
-const MainPage = () => (
+const MainPage = (): JSX.Element => (
     <div>MainPage</div>
 );
 
