@@ -15,7 +15,7 @@ import {
 } from '../utils/consts';
 import '../index.css';
 
-const Header = () => {
+const Header = (): JSX.Element => {
   <NavLink to={MAIN_PAGE_ROUTE} className="nav-link">Главная</NavLink>;
 
   return (

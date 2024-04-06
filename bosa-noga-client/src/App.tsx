@@ -1,12 +1,17 @@
 import { BrowserRouter } from 'react-router-dom';
+import { Container } from 'react-bootstrap';
 import AppRouter from './components/AppRouter.tsx';
 import Header from './components/Header.tsx';
+import Footer from './components/Footer/Footer.tsx';
 
 function App() {
   return (
     <BrowserRouter>
-      <Header />
-      <AppRouter />
+      <Container>
+        <Header />
+        <AppRouter />
+        <Footer />
+      </Container>
     </BrowserRouter>
   );
 }
