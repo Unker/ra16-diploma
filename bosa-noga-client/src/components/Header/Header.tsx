@@ -12,8 +12,10 @@ import {
   CATALOG_ROUTE,
   CONTACTS_ROUTE,
   MAIN_PAGE_ROUTE,
-} from '../utils/consts';
-import '../index.css';
+} from '../../utils/consts';
+import cn from 'classnames';
+import '../../index.css';
+import s from './Header.module.css';
 
 const Header = (): JSX.Element => {
   <NavLink to={MAIN_PAGE_ROUTE} className="nav-link">Главная</NavLink>;
@@ -36,14 +38,14 @@ const Header = (): JSX.Element => {
                 <NavLink className="nav-link" to={CONTACTS_ROUTE}>Контакты</NavLink>
 
                 <div>
-                  <div className="header-controls-pics">
-                    <div data-id="search-expander" className="header-controls-pic header-controls-search"></div>
-                    <div className="header-controls-pic header-controls-cart">
-                      <div className="header-controls-cart-full">1</div>
-                      <div className="header-controls-cart-menu"></div>
+                  <div className={s.headerControlsPics}>
+                    <div data-id="search-expander" className={cn(s.headerControlsPic, s.headerControlsSearch)}></div>
+                    <div className={cn(s.headerControlsPic, s.headerControlsCart)}>
+                      <div className={s.headerControlsCartFull}>1</div>
+                      <div className={s.headerControlsCartMenu}></div>
                     </div>
                   </div>
-                  <form data-id="search-form" className="header-controls-search-form form-inline invisible">
+                  <form data-id="search-form" className={cn(s.headerControlsSearchForm, 'form-inline', 'invisible')}>
                     <input className="form-control" placeholder="Поиск" />
                   </form>
                 </div>
