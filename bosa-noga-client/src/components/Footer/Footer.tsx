@@ -44,7 +44,7 @@ const Footer = (): JSX.Element => (
             </div>
           </section>
         </Col>
-        <div className={cn('col', 'text-right', s.col)}>
+        <Col className='text-end'>
           <section className={s.footerContacts}>
             <h5>Контакты:</h5>
             <a
@@ -61,7 +61,7 @@ const Footer = (): JSX.Element => (
               <div className={cn(s.footerSocialLink, s.footerSocialLinkVk)}></div>
             </div>
           </section>
-        </div>
+        </Col>
       </Row>
     </Container>
   </footer>

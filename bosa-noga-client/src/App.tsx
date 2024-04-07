@@ -7,7 +7,7 @@ import Footer from './components/Footer/Footer.tsx';
 function App() {
   return (
     <BrowserRouter>
-      <Container>
+      <Container className='p-0'>
         <Header />
         <AppRouter />
         <Footer />

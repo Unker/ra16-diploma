@@ -1,13 +1,13 @@
 import { Routes, Route } from 'react-router-dom';
-import { Col, Container, Row } from 'react-bootstrap';
+import { Col, Row } from 'react-bootstrap';
 import publicRoutes, { PublicRoute } from '../routes';
 import NotFoundPage from '../pages/NotFoundPage.tsx';
 import Banner from './Banner/Banner.tsx';
 
 const AppRouter = (): JSX.Element => (
-  <Container>
+  <main className='container'>
     <Row>
-      <Col>
+      <Col className=''>
         <Banner />
         <Routes>
           {publicRoutes.map(({ path, component: Component }: PublicRoute) => (
@@ -18,7 +18,7 @@ const AppRouter = (): JSX.Element => (
         </Routes>
       </Col>
     </Row>
-  </Container>
+  </main>
 );
 
 export default AppRouter;
