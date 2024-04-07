@@ -13,12 +13,12 @@ import {
   CART_ROUTE,
 } from './utils/consts';
 
-export interface PublicRoute {
+export interface IPublicRoute {
   path: string;
   component: React.FC;
 }
 
-const publicRoutes: PublicRoute[] = [
+const publicRoutes: IPublicRoute[] = [
   {
     path: MAIN_PAGE_ROUTE,
     component: MainPage,

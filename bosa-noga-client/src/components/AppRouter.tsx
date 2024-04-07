@@ -1,6 +1,6 @@
 import { Routes, Route } from 'react-router-dom';
 import { Col, Row } from 'react-bootstrap';
-import publicRoutes, { PublicRoute } from '../routes';
+import publicRoutes, { IPublicRoute } from '../routes';
 import NotFoundPage from '../pages/NotFoundPage.tsx';
 import Banner from './Banner/Banner.tsx';
 
@@ -10,7 +10,7 @@ const AppRouter = (): JSX.Element => (
       <Col className=''>
         <Banner />
         <Routes>
-          {publicRoutes.map(({ path, component: Component }: PublicRoute) => (
+          {publicRoutes.map(({ path, component: Component }: IPublicRoute) => (
             <Route key={path} path={path} element={<Component />} />
           ))
           }
