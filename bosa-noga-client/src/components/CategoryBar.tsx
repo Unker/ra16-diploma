@@ -4,6 +4,7 @@ import { ICategory } from "./types";
 import { setSelectedCategory } from "../store/selectedCategorySlice";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from '../store/store';
+import { setCategories } from "../store/categoriesSlice";
 
 const CategoryBar = () => {
   const dispatch = useDispatch();
@@ -32,6 +33,10 @@ const CategoryBar = () => {
     }
   }, [isError]);
 
+  useEffect(() => {
+    dispatch(setCategories(categories));
+  }, [categories]);
+
   if (isLoading) return <div>Loading Categories...</div>;
   if (isError) return null;
 
@@ -39,7 +44,6 @@ const CategoryBar = () => {
     <div className='d-flex flex-direction-row justify-content-center'>
       {categories && categoriesWithAll.map((category) => {
         const isSelected = category.id === selectedCategory ? ' active ' : '';
-        if (isSelected) console.log('cat=', selectedCategory)
         return <a
           key={category.id}
           className={`nav-link mx-3 mb-4 ${isSelected}`}
