@@ -1,5 +1,5 @@
 import React from 'react';
-import { IItemShort } from './types'; // Предполагается, что ваш интерфейс находится в файле types.ts
+import { IItemShort } from './types';
 import { Card } from 'react-bootstrap';
 
 interface ItemProps {
@@ -8,7 +8,6 @@ interface ItemProps {
 
 const Item: React.FC<ItemProps> = ({ item }) => {
   const handleOrderClick = () => {
-    // Обработчик клика на кнопке заказа
     console.log(`Заказ товара: ${item.title}`);
   };
 
