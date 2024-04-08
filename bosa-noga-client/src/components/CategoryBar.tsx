@@ -1,16 +1,20 @@
 import { useGetCategoriesQuery } from "../api/itemsApi";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { ICategory } from "./types";
-
+import { setSelectedCategory } from "../store/selectedCategorySlice";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from '../store/store';
 
 const CategoryBar = () => {
+  const dispatch = useDispatch();
+  const selectedCategory = useSelector((state: RootState) => state.selectedCategory);
+  
   const {
     data: categories = [],
     isFetching,
     isError,
     isLoading
   } = useGetCategoriesQuery();
-  const [selectedCategory, setSelectedCategory] = useState<number>(0);
 
   const allCategory: ICategory = { id: 0, title: "Все" };
 
@@ -19,7 +23,7 @@ const CategoryBar = () => {
   }, [categories]);
 
   const handleSelectCategory = (categoryId: number) => {
-    setSelectedCategory(categoryId);
+    dispatch(setSelectedCategory(categoryId));
   }
 
   useEffect(() => {

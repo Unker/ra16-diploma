@@ -3,18 +3,21 @@ import { Row } from 'react-bootstrap';
 import CategoryBar from './CategoryBar';
 import Item from './Item';
 import { useGetItemsQuery } from '../api/itemsApi';
+import { useSelector } from 'react-redux';
+import { RootState } from '../store/store';
 
 interface CatalogProps {
   searchComponent?: ReactNode;
 }
 
 const Catalog: React.FC<CatalogProps> = ({ searchComponent }) => {
+  const selectedCategory = useSelector((state: RootState) => state.selectedCategory);
 
   const { data: topSalesList = [],
     isFetching: isFetchingItems,
     isError: isErrorItems,
     isLoading: isLoadingItems
-  } = useGetItemsQuery({});
+  } = useGetItemsQuery({ categoryId: selectedCategory });
 
   useEffect(() => {
     if (isErrorItems) {

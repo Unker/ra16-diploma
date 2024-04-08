@@ -20,7 +20,7 @@ export const itemsApi = createApi({
       query: () => 'api/top-sales',
     }),
     getItems: builder.query<IItemShort[], IGetItemsArgs>({
-      query: ({ categoryId = '', offset = 6, q = '' }) => {
+      query: ({ categoryId = '', offset = 0, q = '' }) => {
         // url: `api/items?categoryId=${categoryId}&offset=${offset}&q=${q}`,
         const queryParams = new URLSearchParams();
 
