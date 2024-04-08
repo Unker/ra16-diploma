@@ -1,5 +1,5 @@
 import MainPage from './pages/MainPage.tsx';
-import ProductCatalog from './pages/ProductCatalog.tsx';
+import CatalogPage from './pages/CatalogPage.tsx';
 import AboutPage from './pages/AboutPage.tsx';
 import ContactsPage from './pages/ContactsPage.tsx';
 import ProductPage from './pages/ProductPage.tsx';
@@ -25,7 +25,7 @@ const publicRoutes: IPublicRoute[] = [
   },
   {
     path: CATALOG_ROUTE,
-    component: ProductCatalog,
+    component: CatalogPage,
   },
   {
     path: ABOUT_ROUTE,

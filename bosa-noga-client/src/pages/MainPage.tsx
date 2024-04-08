@@ -1,5 +1,11 @@
+import TopSales from "../components/TopSales";
+import Catalog from "../components/Сatalog";
+
 const MainPage = (): JSX.Element => (
-    <div>MainPage</div>
+  <>
+    <TopSales />
+    <Catalog />
+  </>
 );
 
 export default MainPage;
