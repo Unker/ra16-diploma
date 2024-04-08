@@ -4,6 +4,7 @@ import { useGetItemsQuery } from '../api/itemsApi';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/store';
 import ListItems from './ListItems';
+import LoadMoreItems from './LoadMoreItems';
 
 interface CatalogProps {
   searchComponent?: ReactNode;
@@ -12,16 +13,25 @@ interface CatalogProps {
 const Catalog: React.FC<CatalogProps> = ({ searchComponent }) => {
   const selectedCategory = useSelector((state: RootState) => state.selectedCategory);
   const [offset, setOffset] = useState(0);
+  const [itemsList, setItemsList] = useState<any[]>([]);
+  const countLoadItems = 6;
 
-  const handleLoadMore = () => {
-    setOffset((prevOffset) => prevOffset + 6);
-  };
+  useEffect(() => {
+    setItemsList([]);
+    setOffset(0);
+  }, [selectedCategory]);
 
-  const { data: itemsList = [],
+  const { data: newItemsList = [],
     isFetching: isFetchingItems,
     isError: isErrorItems,
     isLoading: isLoadingItems
   } = useGetItemsQuery({ categoryId: selectedCategory, offset });
+
+  useEffect(() => {
+    if (newItemsList.length > 0) {
+      setItemsList((prevItemsList) => [...prevItemsList, ...newItemsList]);
+    }
+  }, [newItemsList]);
 
   useEffect(() => {
     if (isErrorItems) {
@@ -29,6 +39,9 @@ const Catalog: React.FC<CatalogProps> = ({ searchComponent }) => {
     }
   }, [isErrorItems]);
 
+  const handleLoadMore = () => {
+    setOffset((prevOffset) => prevOffset + countLoadItems);
+  };
 
   if (isLoadingItems) return <div>Loading Items...</div>;
   if (isErrorItems) return <div>Error occurred Items</div>;
@@ -40,7 +53,11 @@ const Catalog: React.FC<CatalogProps> = ({ searchComponent }) => {
       <CategoryBar />
       <ListItems itemsList={itemsList} />
       {isFetchingItems ? <div>Loading more data...</div> : null}
-      <div>Загрузить еще</div>
+      {newItemsList.length === countLoadItems ?
+        <LoadMoreItems offset={offset} onLoadMore={handleLoadMore} />
+        :
+        null
+      }
     </section>
   );
 };
