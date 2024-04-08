@@ -1,6 +1,6 @@
 import React from 'react';
 import { IItemShort } from './types';
-import { Card } from 'react-bootstrap';
+import { Button, Card } from 'react-bootstrap';
 
 interface ItemProps {
   item: IItemShort;
@@ -20,12 +20,18 @@ const Item: React.FC<ItemProps> = ({ item }) => {
     //   <p className="item-price">{item.price} руб.</p>
     //   <button className="btn btn-light align-self-start " onClick={handleOrderClick}>Заказать</button>
     // </div>
-    <Card className='mb-4' style={{ width: '32%' }}>
+    <Card className='mb-4 pt-2 catalog-item-size' style={{ width: '32%' }}>
       <Card.Img variant="top" src={item.images[0]} alt={item.title} />
       <Card.Body>
-      <Card.Title>{item.title}</Card.Title>
-      <Card.Text>{item.price} руб.</Card.Text>
-      <button className="btn btn-light align-self-start " onClick={handleOrderClick}>Заказать</button>
+        <Card.Title>{item.title}</Card.Title>
+        <Card.Text>{item.price} руб.</Card.Text>
+        <Button
+          variant="outline-dark"
+          className="btn btn-light align-self-start "
+          onClick={handleOrderClick}
+        >
+          Заказать
+        </Button>
       </Card.Body>
     </Card>
   );
