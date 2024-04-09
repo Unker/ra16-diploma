@@ -29,9 +29,8 @@ const Search: React.FC<SearchProps> = ({ className }) => {
         dispatch(setSearchQuery(query));
       }
     },
-    [dispatch, query]
+    [dispatch, query],
   );
-  
   return (
     <div>
       <Form
@@ -47,7 +46,7 @@ const Search: React.FC<SearchProps> = ({ className }) => {
         />
       </Form>
     </div>
-  )
+  );
 };
 
 const HeaderSearch = () => (
