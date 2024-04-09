@@ -10,7 +10,7 @@ interface IGetItemsArgs {
 
 export const itemsApi = createApi({
   reducerPath: 'itemsApi',
-  baseQuery: fetchBaseQuery({ baseUrl: import.meta.env.VITE_API_URL, }),
+  baseQuery: fetchBaseQuery({ baseUrl: import.meta.env.VITE_API_URL }),
   endpoints: (builder) => ({
 
     getCategories: builder.query<ICategory[], void>({
@@ -29,7 +29,7 @@ export const itemsApi = createApi({
         if (q) queryParams.append('q', q);
 
         const params = queryParams.toString();
-    
+
         return {
           url: `api/items${params ? `?${params}` : ''}`,
         };
@@ -41,4 +41,6 @@ export const itemsApi = createApi({
   }),
 });
 
-export const { useGetItemsQuery, useGetCategoriesQuery, useGetTopSalesQuery, useGetItemByIdQuery } = itemsApi;
+export const {
+  useGetItemsQuery, useGetCategoriesQuery, useGetTopSalesQuery, useGetItemByIdQuery,
+} = itemsApi;

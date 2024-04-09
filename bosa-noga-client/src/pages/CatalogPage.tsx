@@ -1,4 +1,4 @@
-import Catalog from "../components/Сatalog";
+import Catalog from '../components/Сatalog.tsx';
 
 const CatalogPage = (): JSX.Element => {
   const searchComponent = <div>Search widget</div>;

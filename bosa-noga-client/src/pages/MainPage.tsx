@@ -1,5 +1,5 @@
-import TopSales from "../components/TopSales";
-import Catalog from "../components/Сatalog";
+import TopSales from '../components/TopSales.tsx';
+import Catalog from '../components/Сatalog.tsx';
 
 const MainPage = (): JSX.Element => (
   <>

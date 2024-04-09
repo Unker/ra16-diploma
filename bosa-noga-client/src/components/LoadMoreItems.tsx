@@ -1,6 +1,6 @@
 import { Button } from 'react-bootstrap';
-import { useGetItemsQuery } from '../api/itemsApi';
 import { useEffect } from 'react';
+import { useGetItemsQuery } from '../api/itemsApi';
 
 interface LoadMoreProps {
   offset: number;
@@ -8,7 +8,9 @@ interface LoadMoreProps {
 }
 
 const LoadMoreItems: React.FC<LoadMoreProps> = ({ offset, onLoadMore }) => {
-  const { data: itemsList = [], isFetching, isError, isLoading } = useGetItemsQuery({ offset });
+  const {
+    data: itemsList = [], isFetching, isError, isLoading,
+  } = useGetItemsQuery({ offset });
 
   useEffect(() => {
     if (isError) {

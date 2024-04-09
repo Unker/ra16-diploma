@@ -1,13 +1,14 @@
 import { useEffect } from 'react';
 import { Row } from 'react-bootstrap';
-import Item from './Item';
+import Item from './Item.tsx';
 import { useGetTopSalesQuery } from '../api/itemsApi';
 
 const TopSales = () => {
-  const { data: topSalesList = [],
+  const {
+    data: topSalesList = [],
     isFetching: isFetchingTop,
     isError: isErrorTop,
-    isLoading: isLoadingTop
+    isLoading: isLoadingTop,
   } = useGetTopSalesQuery();
 
   useEffect(() => {
@@ -25,11 +26,8 @@ const TopSales = () => {
     <section className="top-sales">
       <h2 className="text-center">Хиты продаж!</h2>
       <Row className='d-flex justify-content-between'>
-        {topSalesList.map((item) => {
-          return <Item key={item.id} item={item} />
-        }
-      )}
-      { isFetchingTop?<div>Loading more data...</div> : null}
+        {topSalesList.map((item) => <Item key={item.id} item={item} />)}
+      { isFetchingTop ? <div>Loading more data...</div> : null}
     </Row>
     </section >
   );
