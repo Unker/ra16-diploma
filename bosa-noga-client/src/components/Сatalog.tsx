@@ -13,6 +13,7 @@ interface CatalogProps {
 
 const Catalog: React.FC<CatalogProps> = ({ searchComponent }) => {
   const selectedCategory = useSelector((state: RootState) => state.selectedCategory);
+  const search = useSelector((state: RootState) => state.search);
   const [offset, setOffset] = useState(0);
   const [itemsList, setItemsList] = useState<IItemShort[]>([]);
   const countLoadItems = 6;
@@ -20,14 +21,14 @@ const Catalog: React.FC<CatalogProps> = ({ searchComponent }) => {
   useEffect(() => {
     setItemsList([]);
     setOffset(0);
-  }, [selectedCategory]);
+  }, [selectedCategory, search]);
 
   const {
     data: newItemsList = [],
     isFetching: isFetchingItems,
     isError: isErrorItems,
     isLoading: isLoadingItems,
-  } = useGetItemsQuery({ categoryId: selectedCategory, offset });
+  } = useGetItemsQuery({ categoryId: selectedCategory, offset, q: search.searchQuery });
 
   useEffect(() => {
     if (newItemsList.length > 0) {
