@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Form } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
@@ -12,11 +12,26 @@ interface SearchProps {
 const Search: React.FC<SearchProps> = ({ className }) => {
   const dispatch = useDispatch();
   const searchQuery = useSelector((state: RootState) => state.search.searchQuery);
+  const [query, setQuery] = useState('');
+
+  useEffect(() => {
+    setQuery(searchQuery);
+  }, [searchQuery]);
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(setSearchQuery(event.target.value));
+    setQuery(event.target.value);
   };
 
+  const handleKeyDown = useCallback(
+    (event: React.KeyboardEvent<HTMLInputElement>) => {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        dispatch(setSearchQuery(query));
+      }
+    },
+    [dispatch, query]
+  );
+  
   return (
     <div>
       <Form
@@ -26,8 +41,9 @@ const Search: React.FC<SearchProps> = ({ className }) => {
         <Form.Control
           className={`${s.formСontrol}`}
           placeholder="Поиск"
-          value={searchQuery}
+          value={query}
           onChange={handleSearchChange}
+          onKeyDown={handleKeyDown}
         />
       </Form>
     </div>
@@ -35,7 +51,7 @@ const Search: React.FC<SearchProps> = ({ className }) => {
 };
 
 const HeaderSearch = () => (
-  <Search className={`invisible ${s.headerControlsSearchForm}`} />
+  <Search className={` ${s.headerControlsSearchForm}`} />
 );
 const CatalogSearch = () => (
   <Search className={`${s.catalogSearchForm}`} />
