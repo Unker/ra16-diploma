@@ -10,3 +10,22 @@ export interface IItemShort {
   price: number;
   images: string[];
 }
+
+export interface IItemFull {
+  id: number;
+  category: number;
+  title: string;
+  images: string[];
+  sku: string;
+  manufacturer: string;
+  color: string;
+  material: string;
+  reason: string;
+  season: string;
+  heelSize: string;
+  price: number;
+  sizes: {
+    size: string;
+    available: boolean;
+  }[];
+}

@@ -1,6 +1,6 @@
 // api.ts
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { IItemShort, ICategory } from '../components/types';
+import { IItemShort, ICategory, IItemFull } from '../components/types';
 
 interface IGetItemsArgs {
   categoryId?: number | string;
@@ -35,7 +35,7 @@ export const itemsApi = createApi({
         };
       },
     }),
-    getItemById: builder.query<IItemShort, number>({
+    getItemById: builder.query<IItemFull, number>({
       query: (id) => `api/items/${id}`,
     }),
   }),

@@ -112,6 +112,10 @@ section {
 .catalog-item-size {
   display: inline-block;
   padding: 0 10px;
+  margin: 0 2px;
+  border-radius: 15px;
+  border: 1px solid #727e86;
+  cursor: pointer;
 }
 
 .catalog-item-size.selected {
