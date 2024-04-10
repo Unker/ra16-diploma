@@ -39,6 +39,7 @@ export const itemsApi = createApi({
       query: (id) => `api/items/${id}`,
     }),
   }),
+  refetchOnMountOrArgChange: true,
 });
 
 export const {

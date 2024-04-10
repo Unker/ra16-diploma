@@ -14,7 +14,11 @@ const Search = (): JSX.Element => {
     const headerQuery = location.state?.headerSearchQuery;
     if (headerQuery) {
       setQuery(headerQuery);
-    }
+    } 
+    // else {
+    //   setQuery('');
+    //   dispatch(setSearchQuery(''));
+    // }
   }, [location]);
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
