@@ -4,10 +4,11 @@ import { useGetItemsQuery } from '../api/itemsApi';
 
 interface LoadMoreProps {
   offset: number;
+  countLoadItems: number,
   onLoadMore: () => void;
 }
 
-const LoadMoreItems: React.FC<LoadMoreProps> = ({ offset, onLoadMore }) => {
+const LoadMoreItems: React.FC<LoadMoreProps> = ({ offset, countLoadItems, onLoadMore }) => {
   const {
     data: itemsList = [], isFetching, isError, isLoading,
   } = useGetItemsQuery({ offset });
@@ -20,13 +21,12 @@ const LoadMoreItems: React.FC<LoadMoreProps> = ({ offset, onLoadMore }) => {
 
   return (
     <div className='d-flex justify-content-center' >
-      {isFetching ? <div>Loading more data...</div> : null}
       <Button
         variant="outline-dark"
         onClick={onLoadMore}
-        disabled={isLoading || itemsList.length < 6}
+        disabled={isLoading || itemsList.length < countLoadItems}
       >
-        {isLoading ? 'Loading...' : 'Загрузить ещё'}
+        {(isLoading || isFetching) ? 'Loading...' : 'Загрузить ещё'}
       </Button>
     </div>
   );

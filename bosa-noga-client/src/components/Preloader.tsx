@@ -1,11 +1,14 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 const Preloader = () => {
   const [isLoading] = useState(true);
 
   return (
     <div className={isLoading ? 'preloader' : ''}>
-      Preloader
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
     </div>
   );
 };

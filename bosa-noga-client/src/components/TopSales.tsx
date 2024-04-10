@@ -1,34 +1,41 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { Row } from 'react-bootstrap';
 import Item from './Item.tsx';
 import { useGetTopSalesQuery } from '../api/itemsApi';
+import Preloader from './Preloader.tsx';
 
 const TopSales = () => {
   const {
     data: topSalesList = [],
-    isFetching: isFetchingTop,
-    isError: isErrorTop,
-    isLoading: isLoadingTop,
+    isFetching,
+    isError,
+    isLoading,
   } = useGetTopSalesQuery();
 
-  useEffect(() => {
-    if (isErrorTop) {
-      // Обработка ошибки
-    }
-  }, [isErrorTop]);
+  const itemsList = useMemo(() => {
+    if (isFetching) return [];
+    return topSalesList;
+  }, [topSalesList, isFetching]);
 
-  if (isLoadingTop) return <div className="top-sales">Loading TopSales...</div>;
-  if (isErrorTop) return <div className="top-sales">Error occurred TopSales</div>;
-  if (isFetchingTop) return <div className="top-sales">Loading more data...</div>;
-  if (topSalesList?.length === 0) return null;
+  useEffect(() => {
+    if (isError) {
+      console.log('Error occurred TopSales');
+    }
+  }, [isError]);
 
   return (
     <section className="top-sales">
       <h2 className="text-center">Хиты продаж!</h2>
-      <Row className='d-flex justify-content-between'>
-        {topSalesList.map((item) => <Item key={item.id} item={item} />)}
-      { isFetchingTop ? <div>Loading more data...</div> : null}
-    </Row>
+      {(isLoading || isFetching) && <Preloader />}
+      {!(isLoading || isFetching) && isError
+        && <div>'Error occurred TopSales</div>
+      }
+      {(itemsList?.length > 0)
+        && <Row className='d-flex justify-content-between'>
+          {itemsList.map((item) => <Item key={item.id} item={item} />)}
+        </Row>
+      }
+
     </section >
   );
 };

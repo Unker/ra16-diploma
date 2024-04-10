@@ -6,6 +6,7 @@ import { RootState } from '../store/store';
 import CategoryBar from './CategoryBar.tsx';
 import ListItems from './ListItems.tsx';
 import LoadMoreItems from './LoadMoreItems.tsx';
+import Preloader from './Preloader.tsx';
 import { IItemShort } from './types';
 import { setSearchQuery } from '../store/searchSlice';
 
@@ -24,9 +25,9 @@ const Catalog: React.FC<CatalogProps> = ({ searchComponent }) => {
 
   const {
     data: newItemsList = [],
-    isFetching: isFetchingItems,
-    isError: isErrorItems,
-    isLoading: isLoadingItems,
+    isFetching,
+    isError,
+    isLoading,
   } = useGetItemsQuery({ categoryId: selectedCategory, offset, q: search.searchQuery });
 
   useEffect(() => {
@@ -49,17 +50,20 @@ const Catalog: React.FC<CatalogProps> = ({ searchComponent }) => {
   }, [newItemsList]);
 
   useEffect(() => {
-    if (isErrorItems) {
+    if (isError) {
       // Обработка ошибки
     }
-  }, [isErrorItems]);
+  }, [isError]);
 
   const handleLoadMore = () => {
     setOffset((prevOffset) => prevOffset + countLoadItems);
   };
 
-  if (isLoadingItems) return <div>Loading Items...</div>;
-  if (isErrorItems) return <div>Error occurred Items</div>;
+  if (isFetching) console.log('isFetching');
+  if (!isFetching) console.log('not fetching');
+
+  if (isLoading) console.log('isLoading');
+  if (!isLoading) console.log('not isLoading');
 
   return (
     <section className="top-sales catalog">
@@ -67,9 +71,16 @@ const Catalog: React.FC<CatalogProps> = ({ searchComponent }) => {
       {searchComponent && <div>{searchComponent}</div>}
       <CategoryBar />
       <ListItems itemsList={itemsList} />
-      {isFetchingItems ? <div>Loading more data...</div> : null}
-      {newItemsList.length === countLoadItems
-        ? <LoadMoreItems offset={offset} onLoadMore={handleLoadMore} />
+      {(isLoading || isFetching) && <Preloader />}
+      {!(isLoading || isFetching) && isError
+        && <div>'Error occurred TopSales</div>
+      }
+      {!(isLoading || isFetching) && (newItemsList?.length === countLoadItems)
+        ? <LoadMoreItems
+          offset={offset}
+          countLoadItems={countLoadItems}
+          onLoadMore={handleLoadMore}
+        />
         : null
       }
     </section>
