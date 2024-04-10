@@ -1,27 +1,26 @@
 import { ReactNode, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 import { useGetItemsQuery } from '../api/itemsApi';
 import { RootState } from '../store/store';
 import CategoryBar from './CategoryBar.tsx';
 import ListItems from './ListItems.tsx';
 import LoadMoreItems from './LoadMoreItems.tsx';
 import { IItemShort } from './types';
+import { setSearchQuery } from '../store/searchSlice';
 
 interface CatalogProps {
   searchComponent?: ReactNode;
 }
 
 const Catalog: React.FC<CatalogProps> = ({ searchComponent }) => {
+  const dispatch = useDispatch();
   const selectedCategory = useSelector((state: RootState) => state.selectedCategory);
   const search = useSelector((state: RootState) => state.search);
   const [offset, setOffset] = useState(0);
   const [itemsList, setItemsList] = useState<IItemShort[]>([]);
+  const location = useLocation();
   const countLoadItems = 6;
-
-  useEffect(() => {
-    setItemsList([]);
-    setOffset(0);
-  }, [selectedCategory, search]);
 
   const {
     data: newItemsList = [],
@@ -29,6 +28,19 @@ const Catalog: React.FC<CatalogProps> = ({ searchComponent }) => {
     isError: isErrorItems,
     isLoading: isLoadingItems,
   } = useGetItemsQuery({ categoryId: selectedCategory, offset, q: search.searchQuery });
+
+  useEffect(() => {
+    // установка строки поиска при межстраничной навигации
+    if (location.state?.headerSearchQuery) {
+      const { headerSearchQuery } = location.state;
+      dispatch(setSearchQuery(headerSearchQuery));
+    }
+  }, [location, dispatch]);
+
+  useEffect(() => {
+    setItemsList([]);
+    setOffset(0);
+  }, [selectedCategory, search]);
 
   useEffect(() => {
     if (newItemsList.length > 0) {

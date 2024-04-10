@@ -1,60 +1,47 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Form } from 'react-bootstrap';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../store/store';
-import { setSearchQuery } from '../../store/searchSlice';
+import { useDispatch } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 import s from './Search.module.css';
+import { setSearchQuery } from '../../store/searchSlice';
 
-interface SearchProps {
-  className?: string;
-}
-
-const Search: React.FC<SearchProps> = ({ className }) => {
-  const dispatch = useDispatch();
-  const searchQuery = useSelector((state: RootState) => state.search.searchQuery);
+const Search = (): JSX.Element => {
+  const location = useLocation();
   const [query, setQuery] = useState('');
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    setQuery(searchQuery);
-  }, [searchQuery]);
+    const headerQuery = location.state?.headerSearchQuery;
+    if (headerQuery) {
+      setQuery(headerQuery);
+    }
+  }, [location]);
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setQuery(event.target.value);
   };
 
-  const handleKeyDown = useCallback(
-    (event: React.KeyboardEvent<HTMLInputElement>) => {
-      if (event.key === 'Enter') {
-        event.preventDefault();
-        dispatch(setSearchQuery(query));
-      }
-    },
-    [dispatch, query],
-  );
+  const handleSearchFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    dispatch(setSearchQuery(query));
+  };
+
   return (
     <div>
       <Form
         data-id="search-form"
-        className={`form-inline ${className}`}
+        className={`form-inline ${s.catalogSearchForm}`}
+        onSubmit={handleSearchFormSubmit}
       >
         <Form.Control
           className={`${s.formСontrol}`}
           placeholder="Поиск"
           value={query}
           onChange={handleSearchChange}
-          onKeyDown={handleKeyDown}
         />
       </Form>
     </div>
   );
 };
 
-const HeaderSearch = () => (
-  <Search className={` ${s.headerControlsSearchForm}`} />
-);
-const CatalogSearch = () => (
-  <Search className={`${s.catalogSearchForm}`} />
-);
-
-export { HeaderSearch, CatalogSearch };
 export default Search;

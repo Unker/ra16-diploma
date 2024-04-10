@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import {
   Col,
+  Form,
   Image,
   Nav,
   Navbar,
@@ -14,12 +15,38 @@ import {
   CONTACTS_ROUTE,
   MAIN_PAGE_ROUTE,
 } from '../../utils/consts';
-import { HeaderSearch } from '../Search/Search.tsx';
 import '../../index.css';
 import s from './Header.module.css';
 
 const Header = (): JSX.Element => {
-  const [visibleSearch] = useState(false);
+  const [searchText, setSearchText] = useState('');
+  const [searchVisible, setSearchVisible] = useState(false);
+  const navigate = useNavigate();
+
+  const redirectToCatalogPage = () => {
+    const query = searchText.trim();
+    if (query !== '') {
+      navigate(CATALOG_ROUTE, { state: { headerSearchQuery: query } });
+    }
+    setSearchText('');
+    setSearchVisible(false);
+  };
+
+  const handleSearchIconClick = () => {
+    if (searchVisible) {
+      redirectToCatalogPage();
+    }
+    setSearchVisible(!searchVisible);
+  };
+
+  const handleSearchInputChange = (value: string) => {
+    setSearchText(value);
+  };
+
+  const handleSearchFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    redirectToCatalogPage();
+  };
 
   return (
     <header className='container'>
@@ -43,6 +70,7 @@ const Header = (): JSX.Element => {
                   <div
                     data-id="search-expander"
                     className={cn(s.headerControlsPic, s.headerControlsSearch)}
+                    onClick={handleSearchIconClick}
                   >
                   </div>
                   <div className={cn(s.headerControlsPic, s.headerControlsCart)}>
@@ -50,7 +78,23 @@ const Header = (): JSX.Element => {
                     <div className={s.headerControlsCartMenu}></div>
                   </div>
                 </div>
-                {visibleSearch && <HeaderSearch />}
+
+                {searchVisible && (
+                  <div>
+                    <Form
+                      data-id="search-form"
+                      className={`form-inline ${s.headerControlsSearchForm}`}
+                      onSubmit={handleSearchFormSubmit}
+                    >
+                      <Form.Control
+                        className={`${s.formСontrol}`}
+                        placeholder="Поиск"
+                        value={searchText}
+                        onChange={(e) => handleSearchInputChange(e.target.value)}
+                      />
+                    </Form>
+                  </div>
+                )}
               </div>
             </div>
           </Navbar>
