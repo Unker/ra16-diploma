@@ -2,7 +2,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import {
   Button, ButtonGroup, Col, Image, Row, Table,
 } from 'react-bootstrap';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { CART_ROUTE } from '../utils/consts';
 import { useGetItemByIdQuery } from '../api/itemsApi';
 
@@ -19,9 +19,10 @@ const ProductPage = (): JSX.Element => {
     isLoading,
   } = useGetItemByIdQuery(Number(id));
 
-  // useEffect(() => {
-
-  // }, [])
+  useEffect(() => {
+    // Сброс выбранного размера при загрузке нового товара
+    setSelectedSize('');
+  }, [id]);
 
   const validateCount = ((val: number) => {
     const maxCount = 10;
