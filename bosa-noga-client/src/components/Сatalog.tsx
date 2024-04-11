@@ -28,7 +28,7 @@ const Catalog: React.FC<CatalogProps> = ({ searchComponent }) => {
     isFetching,
     isError,
     isLoading,
-    refetch
+    refetch,
   } = useGetItemsQuery({ categoryId: selectedCategory, offset, q: search.searchQuery });
 
   useEffect(() => {
@@ -60,8 +60,6 @@ const Catalog: React.FC<CatalogProps> = ({ searchComponent }) => {
   const handleLoadMore = () => {
     setOffset((prevOffset) => prevOffset + countLoadItems);
   };
-
-  console.log('itemsList',itemsList)
 
   return (
     <section className="top-sales catalog">

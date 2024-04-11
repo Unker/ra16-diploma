@@ -17,5 +17,4 @@ const LoadMoreItems: React.FC<LoadMoreProps> = ({ onLoadMore }) => (
   </div>
 );
 
-
 export default LoadMoreItems;

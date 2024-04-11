@@ -5,7 +5,7 @@ import {
 import { useEffect, useState } from 'react';
 import { CART_ROUTE } from '../utils/consts';
 import { useGetItemByIdQuery } from '../api/itemsApi';
-import Preloader from '../components/Preloader';
+import Preloader from '../components/Preloader.tsx';
 
 const ProductPage = (): JSX.Element => {
   const { id } = useParams();
