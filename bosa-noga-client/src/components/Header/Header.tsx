@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import {
   Col,
@@ -11,6 +11,7 @@ import {
 import cn from 'classnames';
 import {
   ABOUT_ROUTE,
+  CART_ROUTE,
   CATALOG_ROUTE,
   CONTACTS_ROUTE,
   MAIN_PAGE_ROUTE,
@@ -73,7 +74,10 @@ const Header = (): JSX.Element => {
                     onClick={handleSearchIconClick}
                   >
                   </div>
-                  <div className={cn(s.headerControlsPic, s.headerControlsCart)}>
+                  <div
+                    className={cn(s.headerControlsPic, s.headerControlsCart)}
+                    onClick={() => navigate(CART_ROUTE)}
+                  >
                     <div className={s.headerControlsCartFull}>1</div>
                     <div className={s.headerControlsCartMenu}></div>
                   </div>
