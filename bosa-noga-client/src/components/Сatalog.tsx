@@ -28,7 +28,14 @@ const Catalog: React.FC<CatalogProps> = ({ searchComponent }) => {
     isFetching,
     isError,
     isLoading,
+    refetch
   } = useGetItemsQuery({ categoryId: selectedCategory, offset, q: search.searchQuery });
+
+  useEffect(() => {
+    refetch();
+    setItemsList([]);
+    setOffset(0);
+  }, [location.pathname, selectedCategory, search.searchQuery, refetch]);
 
   useEffect(() => {
     // установка строки поиска при межстраничной навигации
@@ -37,11 +44,6 @@ const Catalog: React.FC<CatalogProps> = ({ searchComponent }) => {
       dispatch(setSearchQuery(headerSearchQuery));
     }
   }, [location, dispatch]);
-
-  useEffect(() => {
-    setItemsList([]);
-    setOffset(0);
-  }, [selectedCategory, search]);
 
   useEffect(() => {
     if (newItemsList.length > 0) {
@@ -59,11 +61,7 @@ const Catalog: React.FC<CatalogProps> = ({ searchComponent }) => {
     setOffset((prevOffset) => prevOffset + countLoadItems);
   };
 
-  if (isFetching) console.log('isFetching');
-  if (!isFetching) console.log('not fetching');
-
-  if (isLoading) console.log('isLoading');
-  if (!isLoading) console.log('not isLoading');
+  console.log('itemsList',itemsList)
 
   return (
     <section className="top-sales catalog">
@@ -75,14 +73,13 @@ const Catalog: React.FC<CatalogProps> = ({ searchComponent }) => {
       {!(isLoading || isFetching) && isError
         && <div>'Error occurred TopSales</div>
       }
-      {!(isLoading || isFetching) && (newItemsList?.length === countLoadItems)
-        ? <LoadMoreItems
+      {!(isLoading || isFetching) && (newItemsList?.length === countLoadItems) && (
+        <LoadMoreItems
           offset={offset}
           countLoadItems={countLoadItems}
           onLoadMore={handleLoadMore}
         />
-        : null
-      }
+      )}
     </section>
   );
 };
