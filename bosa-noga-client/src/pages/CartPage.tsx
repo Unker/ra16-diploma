@@ -1,12 +1,23 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Button, Card, Form, Table,
 } from 'react-bootstrap';
 import checkPhoneNumber from '../utils/phone/checkPhoneNumber';
+import { PRODUCT_ROUTE } from '../utils/consts';
+import { NavLink } from 'react-router-dom';
 
 const CartPage = () => {
   const [phone, setPhone] = useState('');
   const [phoneValid, setPhoneValid] = useState(true);
+  const [cartItems, setCartItems] = useState<{ id: number; size: string; count: number }[]>([]);
+
+  useEffect(() => {
+    // Загрузка корзины из localStorage
+    const savedCartItems = localStorage.getItem('cartItems');
+    if (savedCartItems) {
+      setCartItems(JSON.parse(savedCartItems));
+    }
+  }, []);
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
@@ -43,15 +54,29 @@ const CartPage = () => {
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td scope="row">1</td>
-              <td><a href="/products/1.html">Босоножки 'MYER'</a></td>
-              <td>18 US</td>
-              <td>1</td>
-              <td>34 000 руб.</td>
-              <td>34 000 руб.</td>
-              <td><button className="btn btn-outline-danger btn-sm">Удалить</button></td>
-            </tr>
+            {cartItems?.length > 0 && (
+              cartItems.map(({ id, size, count }, index) => (
+                <tr key={index}>
+                  <td scope="row">{index + 1}</td>
+                  <td>
+                    <NavLink to={`${PRODUCT_ROUTE}/${id}`}>Продукт</NavLink>
+                  </td>
+                  <td>{size}</td>
+                  <td>{count}</td>
+                  <td>34 000 руб.</td>
+                  <td>34 000 руб.</td>
+                  <td>
+                    <Button
+                      variant="outline-danger"
+                      className="btn-sm"
+                      onClick={() => console.log('удалить', id)}
+                    >
+                      Удалить
+                    </Button>
+                  </td>
+                </tr>
+              ))
+            )}
             <tr>
               <td colSpan={5} className="text-right">Общая стоимость</td>
               <td>34 000 руб.</td>
@@ -83,10 +108,10 @@ const CartPage = () => {
               </Form.Group>
               <Form.Group controlId="address" className="mb-3">
                 <Form.Label>Адрес доставки</Form.Label>
-                <Form.Control type="text" placeholder="Адрес доставки" />
+                <Form.Control type="text" placeholder="Адрес доставки" required/>
               </Form.Group>
               <Form.Group controlId="agreement" className="mb-3">
-                <Form.Check type="checkbox" label="Согласен с правилами доставки" />
+                <Form.Check type="checkbox" label="Согласен с правилами доставки" required/>
               </Form.Group>
               <Button variant="outline-secondary" type="submit">Оформить</Button>
             </Form>
