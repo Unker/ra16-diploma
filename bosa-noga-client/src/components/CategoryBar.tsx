@@ -67,7 +67,7 @@ const CategoryBar = () => {
             >
               {category.title}
             </Nav.Link>
-          </Nav.Item>
+          </Nav.Item>;
         })}
       </Nav>
     </div>

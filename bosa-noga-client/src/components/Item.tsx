@@ -12,7 +12,6 @@ const Item: React.FC<ItemProps> = ({ item }) => {
   const navigate = useNavigate();
 
   const handleOrderClick = () => {
-    console.log(`Заказ товара: ${item.title}`);
     navigate(`${PRODUCT_ROUTE}/${item.id}`);
   };
 

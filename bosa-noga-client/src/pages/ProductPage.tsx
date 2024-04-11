@@ -2,7 +2,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import {
   Button, ButtonGroup, Col, Image, Row, Table,
 } from 'react-bootstrap';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { CART_ROUTE } from '../utils/consts';
 import { useGetItemByIdQuery } from '../api/itemsApi';
 import Preloader from '../components/Preloader.tsx';
@@ -37,6 +37,10 @@ const ProductPage = (): JSX.Element => {
   const handleOrderProduct = (() => {
     navigate(CART_ROUTE);
   });
+
+  const isAvailableSomeSize = useMemo(() => (
+    data?.sizes.some(({ available }) => available)
+  ), [data]);
 
   return (
     <>
@@ -96,37 +100,44 @@ const ProductPage = (): JSX.Element => {
                       </span>;
                     })}
                   </div>
-                  <div className="mb-3">
-                    {'Количество: '}
-                    <ButtonGroup
-                      size="sm"
-                      className="pl-2"
+                  {!isAvailableSomeSize && (
+                    <span>К сожалению, нет доступных размеров</span>
+                  )}
+                  {isAvailableSomeSize && (
+                    <div className="mb-3">
+                      {'Количество: '}
+                      <ButtonGroup
+                        size="sm"
+                        className="pl-2"
+                      >
+                        <Button
+                          variant="secondary"
+                          onClick={() => validateCount(count - 1)}
+                        >-</Button>
+                        <Button
+                          variant="outline-primary"
+                        >{count}</Button>
+                        <Button
+                          variant="secondary"
+                          onClick={() => validateCount(count + 1)}
+                        >+</Button>
+                      </ButtonGroup>
+                    </div>
+                  )}
+                </div>
+                {isAvailableSomeSize && (
+                  <div className="d-grid">
+                    <Button
+                      variant="danger"
+                      size="lg"
+                      disabled={selectedSize === ''}
+                      onClick={() => handleOrderProduct()}
                     >
-                      <Button
-                        variant="secondary"
-                        onClick={() => validateCount(count - 1)}
-                      >-</Button>
-                      <Button
-                        variant="outline-primary"
-                      >{count}</Button>
-                      <Button
-                        variant="secondary"
-                        onClick={() => validateCount(count + 1)}
-                      >+</Button>
-                    </ButtonGroup>
-                  </div>
-                </div>
-                <div className="d-grid">
-                  <Button
-                    variant="danger"
-                    size="lg"
-                    disabled={selectedSize === ''}
-                    onClick={() => handleOrderProduct()}
-                  >
-                    В корзину
-                  </Button>
+                      В корзину
+                    </Button>
 
-                </div>
+                  </div>
+                )}
               </Col>
             </Row>
           </>
