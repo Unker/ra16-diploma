@@ -5,6 +5,7 @@ import {
 import { useEffect, useState } from 'react';
 import { CART_ROUTE } from '../utils/consts';
 import { useGetItemByIdQuery } from '../api/itemsApi';
+import Preloader from '../components/Preloader';
 
 const ProductPage = (): JSX.Element => {
   const { id } = useParams();
@@ -14,7 +15,7 @@ const ProductPage = (): JSX.Element => {
 
   const {
     data,
-    // isFetching,
+    isFetching,
     isError,
     isLoading,
   } = useGetItemByIdQuery(Number(id));
@@ -37,98 +38,100 @@ const ProductPage = (): JSX.Element => {
     navigate(CART_ROUTE);
   });
 
-  if (isLoading) return <div>Loading Item...</div>;
-  if (isError) return <div>Error occurred Item</div>;
-
   return (
     <>
-      Hello + {id}
-      {data
-        && <section className="catalog-item">
-          <h2 className="text-center">{data.title}</h2>
-          <Row>
-            <Col className="col-5">
-              <Image src={data.images[0]}
-                className="img-fluid" alt={data.title} />
-            </Col>
-            <Col className="col-7">
-              <Table bordered>
-                <tbody>
-                  <tr>
-                    <td>Артикул</td>
-                    <td>{data.sku}</td>
-                  </tr>
-                  <tr>
-                    <td>Производитель</td>
-                    <td>{data.manufacturer}</td>
-                  </tr>
-                  <tr>
-                    <td>Цвет</td>
-                    <td>{data.color}</td>
-                  </tr>
-                  <tr>
-                    <td>Материалы</td>
-                    <td>{data.material}</td>
-                  </tr>
-                  <tr>
-                    <td>Сезон</td>
-                    <td>{data.season}</td>
-                  </tr>
-                  <tr>
-                    <td>Повод</td>
-                    <td>{data.reason}</td>
-                  </tr>
-                </tbody>
-              </Table>
-              <div className="text-center">
-                <div className="mb-3">
-                  {'Размеры в наличии: '}
-                  {data.sizes.map(({ size, available }, index) => {
-                    const isSelected = size === selectedSize ? 'selected' : '';
-                    return available && <span
-                      key={index}
-                      className={`catalog-item-size ${isSelected}`}
-                      onClick={() => setSelectedSize(size)}
+      <section className="catalog-item">
+        {(isLoading || isFetching) && <Preloader />}
+        {!(isLoading || isFetching) && isError
+          && <div>'Error occurred...</div>
+        }
+        {!(isLoading || isFetching) && data
+          && <>
+            <h2 className="text-center">{data.title}</h2>
+            <Row>
+              <Col className="col-5">
+                <Image src={data.images[0]}
+                  className="img-fluid" alt={data.title} />
+              </Col>
+              <Col className="col-7">
+                <Table bordered>
+                  <tbody>
+                    <tr>
+                      <td>Артикул</td>
+                      <td>{data.sku}</td>
+                    </tr>
+                    <tr>
+                      <td>Производитель</td>
+                      <td>{data.manufacturer}</td>
+                    </tr>
+                    <tr>
+                      <td>Цвет</td>
+                      <td>{data.color}</td>
+                    </tr>
+                    <tr>
+                      <td>Материалы</td>
+                      <td>{data.material}</td>
+                    </tr>
+                    <tr>
+                      <td>Сезон</td>
+                      <td>{data.season}</td>
+                    </tr>
+                    <tr>
+                      <td>Повод</td>
+                      <td>{data.reason}</td>
+                    </tr>
+                  </tbody>
+                </Table>
+                <div className="text-center">
+                  <div className="mb-3">
+                    {'Размеры в наличии: '}
+                    {data.sizes.map(({ size, available }, index) => {
+                      const isSelected = size === selectedSize ? 'selected' : '';
+                      return available && <span
+                        key={index}
+                        className={`catalog-item-size ${isSelected}`}
+                        onClick={() => setSelectedSize(size)}
+                      >
+                        {size}
+                      </span>;
+                    })}
+                  </div>
+                  <div className="mb-3">
+                    {'Количество: '}
+                    <ButtonGroup
+                      size="sm"
+                      className="pl-2"
                     >
-                      {size}
-                    </span>;
-                  })}
+                      <Button
+                        variant="secondary"
+                        onClick={() => validateCount(count - 1)}
+                      >-</Button>
+                      <Button
+                        variant="outline-primary"
+                      >{count}</Button>
+                      <Button
+                        variant="secondary"
+                        onClick={() => validateCount(count + 1)}
+                      >+</Button>
+                    </ButtonGroup>
+                  </div>
                 </div>
-                <div className="mb-3">
-                  {'Количество: '}
-                  <ButtonGroup
-                    size="sm"
-                    className="pl-2"
+                <div className="d-grid">
+                  <Button
+                    variant="danger"
+                    size="lg"
+                    disabled={selectedSize === ''}
+                    onClick={() => handleOrderProduct()}
                   >
-                    <Button
-                      variant="secondary"
-                      onClick={() => validateCount(count - 1)}
-                    >-</Button>
-                    <Button
-                      variant="outline-primary"
-                    >{count}</Button>
-                    <Button
-                      variant="secondary"
-                      onClick={() => validateCount(count + 1)}
-                    >+</Button>
-                  </ButtonGroup>
-                </div>
-              </div>
-              <div className="d-grid">
-                <Button
-                  variant="danger"
-                  size="lg"
-                  disabled={selectedSize === ''}
-                  onClick={() => handleOrderProduct()}
-                >
-                  В корзину
-                </Button>
+                    В корзину
+                  </Button>
 
-              </div>
-            </Col>
-          </Row>
-        </section>
-      }
+                </div>
+              </Col>
+            </Row>
+          </>
+        }
+      </section>
     </>
   );
 };
