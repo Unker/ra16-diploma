@@ -5,6 +5,7 @@ import { RootState } from '../store/store';
 import { setSelectedCategory } from '../store/selectedCategorySlice';
 import { setCategories } from '../store/categoriesSlice';
 import { ICategory } from './types';
+import { Nav, Placeholder } from 'react-bootstrap';
 
 const CategoryBar = () => {
   const dispatch = useDispatch();
@@ -22,6 +23,20 @@ const CategoryBar = () => {
     return [allCategory, ...categories];
   }, [categories]);
 
+  const itemsList = useMemo(() => {
+    if (isFetching) return [];
+    return categoriesWithAll;
+  }, [categoriesWithAll, isFetching]);
+
+  useEffect(() => {
+      dispatch(setCategories(categories));
+  }, [categories, dispatch]);
+
+  useEffect(() => {
+    // установка категории "Все" при межстраничной навигации
+    dispatch(setSelectedCategory(0));
+  }, [location, dispatch]);
+
   const handleSelectCategory = (categoryId: number) => {
     dispatch(setSelectedCategory(categoryId));
   };
@@ -32,26 +47,31 @@ const CategoryBar = () => {
     }
   }, [isError]);
 
-  useEffect(() => {
-    dispatch(setCategories(categories));
-  }, [dispatch, categories]);
-
-  if (isLoading) return <div>Loading Categories...</div>;
-  if (isError) return null;
+  // useEffect(() => {
+  //   dispatch(setCategories(categories));
+  // }, [dispatch, categories]);
 
   return (
     <div className='d-flex flex-direction-row justify-content-center'>
-      {categories && categoriesWithAll.map((category) => {
-        const isSelected = category.id === selectedCategory ? ' active ' : '';
-        return <a
-          key={category.id}
-          className={`nav-link mx-3 mb-4 ${isSelected}`}
-          onClick={() => handleSelectCategory(category.id)}
-        >
-          {category.title}
-        </a>;
-      })}
-      {isFetching ? <div>Loading more data...</div> : null}
+      {(isLoading || isFetching)
+        && <Placeholder as={Nav.Link} animation="glow" className='mx-3 mb-4' style={{ width: '60%' }}>
+          <Placeholder style={{ width: '100%' }} />
+        </Placeholder>
+      }
+      <Nav variant="underline">
+        {categories && itemsList.map((category) => {
+          const isSelected = category.id === selectedCategory ? ' active ' : '';
+          return <Nav.Item key={category.id}>
+            <Nav.Link
+              key={category.id}
+              className={`mx-3 mb-4 ${isSelected}`}
+              onClick={() => handleSelectCategory(category.id)}
+            >
+              {category.title}
+            </Nav.Link>
+          </Nav.Item>
+        })}
+      </Nav>
     </div>
   );
 };
