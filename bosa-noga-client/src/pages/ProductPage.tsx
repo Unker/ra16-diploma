@@ -1,8 +1,8 @@
-import { useNavigate, useParams } from 'react-router-dom';
+import React, { useNavigate, useParams } from 'react-router-dom';
 import {
   Button, ButtonGroup, Col, Image, Row, Table,
 } from 'react-bootstrap';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { CART_ROUTE } from '../utils/consts';
 import { useGetItemByIdQuery } from '../api/itemsApi';
 import Preloader from '../components/Preloader/Preloader.tsx';
@@ -12,6 +12,7 @@ const ProductPage = (): JSX.Element => {
   const navigate = useNavigate();
   const [count, setCount] = useState(1);
   const [selectedSize, setSelectedSize] = useState('');
+  const [cartItems, setCartItems] = useState<{ id: number; size: string; count: number }[]>([]);
 
   const {
     data,
@@ -34,13 +35,35 @@ const ProductPage = (): JSX.Element => {
     setCount(res);
   });
 
-  const handleOrderProduct = (() => {
-    navigate(CART_ROUTE);
-  });
-
   const isAvailableSomeSize = useMemo(() => (
     data?.sizes.some(({ available }) => available)
   ), [data]);
+
+  useEffect(() => {
+    // Загрузка корзины из localStorage
+    const savedCartItems = localStorage.getItem('cartItems');
+    if (savedCartItems) {
+      setCartItems(JSON.parse(savedCartItems));
+    }
+  }, []);
+
+  const handleOrderProduct = useCallback(() => {
+    console.log('cartItems',cartItems)
+    const existIdx = cartItems.findIndex((item) => item.id === Number(id) && item.size === selectedSize);
+    console.log('existingItemIndex',existIdx)
+    if (existIdx !== -1) {
+      const updatedCartItems = [...cartItems];
+      updatedCartItems[existIdx].count += count;
+      setCartItems(updatedCartItems);
+    } else {
+      const newItem = { id: Number(id), size: selectedSize, count };
+      console.log('newItem',newItem)
+      setCartItems((prevCartItems) => [...prevCartItems, newItem]);
+    }
+     // Сохранение корзины в localStorage
+    localStorage.setItem('cartItems', JSON.stringify(cartItems));
+    navigate(CART_ROUTE);
+  }, [id, selectedSize, count, navigate, cartItems]);
 
   return (
     <>
@@ -135,7 +158,6 @@ const ProductPage = (): JSX.Element => {
                     >
                       В корзину
                     </Button>
-
                   </div>
                 )}
               </Col>

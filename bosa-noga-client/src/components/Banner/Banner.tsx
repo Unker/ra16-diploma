@@ -1,4 +1,4 @@
-import { Image } from 'react-bootstrap';
+import React, { Image } from 'react-bootstrap';
 import s from './Banner.module.css';
 
 const Banner = (): JSX.Element => (
