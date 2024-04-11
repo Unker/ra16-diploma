@@ -49,10 +49,6 @@ const CategoryBar = () => {
     }
   }, [isError]);
 
-  // useEffect(() => {
-  //   dispatch(setCategories(categories));
-  // }, [dispatch, categories]);
-
   return (
     <div className='d-flex flex-direction-row justify-content-center'>
       {(isLoading || isFetching)
