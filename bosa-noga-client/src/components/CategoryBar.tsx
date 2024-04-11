@@ -1,13 +1,15 @@
 import { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Nav, Placeholder } from 'react-bootstrap';
+import { useLocation } from 'react-router-dom';
 import { useGetCategoriesQuery } from '../api/itemsApi';
 import { RootState } from '../store/store';
 import { setSelectedCategory } from '../store/selectedCategorySlice';
 import { setCategories } from '../store/categoriesSlice';
 import { ICategory } from './types';
-import { Nav, Placeholder } from 'react-bootstrap';
 
 const CategoryBar = () => {
+  const location = useLocation();
   const dispatch = useDispatch();
   const selectedCategory = useSelector((state: RootState) => state.selectedCategory);
 
@@ -29,13 +31,13 @@ const CategoryBar = () => {
   }, [categoriesWithAll, isFetching]);
 
   useEffect(() => {
-      dispatch(setCategories(categories));
+    dispatch(setCategories(categories));
   }, [categories, dispatch]);
 
   useEffect(() => {
     // установка категории "Все" при межстраничной навигации
     dispatch(setSelectedCategory(0));
-  }, [location, dispatch]);
+  }, [location.pathname, dispatch]);
 
   const handleSelectCategory = (categoryId: number) => {
     dispatch(setSelectedCategory(categoryId));
