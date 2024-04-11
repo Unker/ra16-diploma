@@ -2,7 +2,7 @@ import { useEffect, useMemo } from 'react';
 import { Row } from 'react-bootstrap';
 import Item from './Item.tsx';
 import { useGetTopSalesQuery } from '../api/itemsApi';
-import Preloader from './Preloader.tsx';
+import Preloader from './Preloader/Preloader.tsx';
 
 const TopSales = () => {
   const {

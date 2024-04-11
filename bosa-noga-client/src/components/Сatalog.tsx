@@ -6,7 +6,7 @@ import { RootState } from '../store/store';
 import CategoryBar from './CategoryBar.tsx';
 import ListItems from './ListItems.tsx';
 import LoadMoreItems from './LoadMoreItems.tsx';
-import Preloader from './Preloader.tsx';
+import Preloader from './Preloader/Preloader.tsx';
 import { IItemShort } from './types';
 import { setSearchQuery } from '../store/searchSlice';
 
@@ -62,7 +62,7 @@ const Catalog: React.FC<CatalogProps> = ({ searchComponent }) => {
   };
 
   return (
-    <section className="top-sales catalog">
+    <section className="catalog">
       <h2 className="text-center">Каталог</h2>
       {searchComponent && <div>{searchComponent}</div>}
       <CategoryBar />
