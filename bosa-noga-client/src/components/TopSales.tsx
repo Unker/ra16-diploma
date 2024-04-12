@@ -3,12 +3,14 @@ import { Row } from 'react-bootstrap';
 import Item from './Item.tsx';
 import { useGetTopSalesQuery } from '../api/itemsApi';
 import Preloader from './Preloader/Preloader.tsx';
+import getRtkErrorMessage from '../utils/getRtkErrorMessage';
 
 const TopSales = () => {
   const {
     data: topSalesList = [],
     isFetching,
     isError,
+    error,
     isLoading,
   } = useGetTopSalesQuery();
 
@@ -18,18 +20,19 @@ const TopSales = () => {
   }, [topSalesList, isFetching]);
 
   useEffect(() => {
-    if (isError) {
-      console.log('Error occurred TopSales');
+    if (error) {
+      const errMsg = getRtkErrorMessage(error);
+      console.log(errMsg);
     }
-  }, [isError]);
+  }, [error]);
 
   return (
     <section className="top-sales">
       <h2 className="text-center">Хиты продаж!</h2>
       {(isLoading || isFetching) && <Preloader />}
-      {!(isLoading || isFetching) && isError
-        && <div>'Error occurred TopSales</div>
-      }
+      {!(isLoading || isFetching) && isError && (
+        <div className="text-center">Ошибка получения данных от сервера</div>
+      )}
       {(itemsList?.length > 0)
         && <Row className='d-flex justify-content-between'>
           {itemsList.map((item) => <Item key={item.id} item={item} />)}

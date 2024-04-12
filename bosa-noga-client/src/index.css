@@ -18,18 +18,18 @@ body {
   font-family: 'Roboto', sans-serif;
 }
 
-.nav-link {
+.nav-link, a {
   color: #727e86;
 }
 
-.nav-link,
-.nav-link:hover,
-.nav-link:visited,
-.nav-link:active {
+.nav-link, a,
+.nav-link:hover, a:hover,
+.nav-link:visited, a:visited,
+.nav-link:active, a:active {
   text-decoration: none;
 }
 
-.nav-link:hover {
+.nav-link:hover, a:hover {
   cursor: pointer;
 }
 

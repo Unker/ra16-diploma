@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Card, Form } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 import { useCreateOrderMutation } from '../api/itemsApi';
 import { setCartItems } from '../store/cartSlice';
 import { RootState } from '../store/store';
 import checkPhoneNumber from '../utils/phone/checkPhoneNumber';
 import Preloader from './Preloader/Preloader.tsx';
 import { IOrder } from './types';
+import getRtkErrorMessage from '../utils/getRtkErrorMessage';
 
 const OrderForm: React.FC = () => {
   const cartItems = useSelector((state: RootState) => state.cart);
@@ -15,17 +17,28 @@ const OrderForm: React.FC = () => {
   const [phoneValid, setPhoneValid] = useState(true);
 
   const dispatch = useDispatch();
-  const [createOrder, { isLoading, isError, isSuccess }] = useCreateOrderMutation();
+  const [createOrder, { isLoading, isSuccess, error }] = useCreateOrderMutation();
 
   useEffect(() => {
-    if (isError || isSuccess) {
+    if (isSuccess) {
       // сброс формы
       setPhone('');
       setAddress('');
 
       dispatch(setCartItems([]));
     }
-  }, [isError, isSuccess, dispatch]);
+  }, [isSuccess, dispatch]);
+
+  useEffect(() => {
+    if (error) {
+      const errMsg = getRtkErrorMessage(error);
+      console.log(errMsg);
+      toast.error(
+        'Ошибка формирования заказа. Повторите попытку чуть позже',
+        { position: 'top-center' },
+      );
+    }
+  }, [error]);
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
@@ -55,8 +68,9 @@ const OrderForm: React.FC = () => {
         };
         await createOrder(order).unwrap();
         console.log('Order created successfully!');
-      } catch (error) {
-        console.error('Failed to create order:', error);
+        toast.success('Ваш заказ успешно создан', { position: 'top-center' });
+      } catch (err) {
+        console.log('error create order, err=', err);
       }
     }
   };

@@ -9,6 +9,7 @@ import LoadMoreItems from './LoadMoreItems.tsx';
 import Preloader from './Preloader/Preloader.tsx';
 import { IItemShort } from './types';
 import { setSearchQuery } from '../store/searchSlice';
+import getRtkErrorMessage from '../utils/getRtkErrorMessage';
 
 interface CatalogProps {
   searchComponent?: ReactNode;
@@ -28,6 +29,7 @@ const Catalog: React.FC<CatalogProps> = ({ searchComponent }) => {
     isFetching,
     isError,
     isLoading,
+    error,
     refetch,
   } = useGetItemsQuery({ categoryId: selectedCategory, offset, q: search.searchQuery });
 
@@ -52,10 +54,11 @@ const Catalog: React.FC<CatalogProps> = ({ searchComponent }) => {
   }, [newItemsList]);
 
   useEffect(() => {
-    if (isError) {
-      // Обработка ошибки
+    if (error) {
+      const errMsg = getRtkErrorMessage(error);
+      console.log(errMsg);
     }
-  }, [isError]);
+  }, [error]);
 
   const handleLoadMore = () => {
     setOffset((prevOffset) => prevOffset + countLoadItems);
@@ -68,9 +71,9 @@ const Catalog: React.FC<CatalogProps> = ({ searchComponent }) => {
       <CategoryBar />
       <ListItems itemsList={itemsList} />
       {(isLoading || isFetching) && <Preloader />}
-      {!(isLoading || isFetching) && isError
-        && <div>'Error occurred TopSales</div>
-      }
+      {!(isLoading || isFetching) && isError && (
+        <div className="text-center">Ошибка получения данных от сервера</div>
+      )}
       {!(isLoading || isFetching) && (newItemsList?.length === countLoadItems) && (
         <LoadMoreItems
           offset={offset}
