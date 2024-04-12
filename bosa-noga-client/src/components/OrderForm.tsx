@@ -14,7 +14,7 @@ const OrderForm: React.FC = () => {
   const cartItems = useSelector((state: RootState) => state.cart);
   const [phone, setPhone] = useState('');
   const [address, setAddress] = useState('');
-  const [phoneValid, setPhoneValid] = useState(true);
+  const [isValidPhone, setIsValidPhone] = useState(true);
 
   const dispatch = useDispatch();
   const [createOrder, { isLoading, isSuccess, error }] = useCreateOrderMutation();
@@ -43,7 +43,7 @@ const OrderForm: React.FC = () => {
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     setPhone(value);
-    setPhoneValid(true);
+    setIsValidPhone(true);
   };
 
   const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -56,8 +56,9 @@ const OrderForm: React.FC = () => {
     // Проверка валидности номера телефона
     const correctedPhone = checkPhoneNumber(phone);
     const isValid = (correctedPhone !== null);
-    setPhoneValid(isValid);
-    if (isValid) {
+    setIsValidPhone(isValid);
+    const isCartNotEmpty = cartItems.length > 0;
+    if (isValid && isCartNotEmpty) {
       setPhone(correctedPhone);
       try {
         const order: IOrder = {
@@ -72,6 +73,10 @@ const OrderForm: React.FC = () => {
       } catch (err) {
         console.log('error create order, err=', err);
       }
+    }
+
+    if (!isCartNotEmpty) {
+      toast.warning('Ваша корзина пуста', { position: 'top-center' });
     }
   };
 
@@ -93,9 +98,9 @@ const OrderForm: React.FC = () => {
                     placeholder="Ваш телефон"
                     value={phone}
                     onChange={handlePhoneChange}
-                    isInvalid={!phoneValid}
+                    isInvalid={!isValidPhone}
                   />
-                  {!phoneValid && (
+                  {!isValidPhone && (
                     <p className='mt-n2 mb-2'
                       style={{ color: 'red', fontSize: '0.8rem' }}
                     >
