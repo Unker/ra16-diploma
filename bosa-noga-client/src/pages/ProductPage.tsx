@@ -45,9 +45,9 @@ const ProductPage = (): JSX.Element => {
     data?.sizes.some(({ available }) => available)
   ), [data]);
 
-  useEffect(() => {
-    localStorage.setItem('cartItems', JSON.stringify(cartItems));
-  }, [cartItems]);
+  // useEffect(() => {
+  //   localStorage.setItem('cartItems', JSON.stringify(cartItems));
+  // }, [cartItems]);
 
   const handleOrderProduct = useCallback(() => {
     const existIdx = cartItems.findIndex(
