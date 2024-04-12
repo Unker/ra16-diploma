@@ -29,3 +29,11 @@ export interface IItemFull {
     available: boolean;
   }[];
 }
+
+export interface ICartItem {
+  id: number;
+  size: string;
+  title: string;
+  count: number;
+  price: number;
+}

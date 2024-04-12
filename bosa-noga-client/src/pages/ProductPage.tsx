@@ -1,4 +1,4 @@
-import React, { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import {
   Button, ButtonGroup, Col, Image, Row, Table,
 } from 'react-bootstrap';
@@ -6,13 +6,14 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { CART_ROUTE } from '../utils/consts';
 import { useGetItemByIdQuery } from '../api/itemsApi';
 import Preloader from '../components/Preloader/Preloader.tsx';
+import { ICartItem } from '../components/types.ts';
 
 const ProductPage = (): JSX.Element => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [count, setCount] = useState(1);
   const [selectedSize, setSelectedSize] = useState('');
-  const [cartItems, setCartItems] = useState<{ id: number; size: string; count: number }[]>([]);
+  const [cartItems, setCartItems] = useState<ICartItem[]>([]);
 
   const {
     data,
@@ -47,22 +48,31 @@ const ProductPage = (): JSX.Element => {
     }
   }, []);
 
+  useEffect(() => {
+    localStorage.setItem('cartItems', JSON.stringify(cartItems));
+  }, [cartItems]);
+
   const handleOrderProduct = useCallback(() => {
-    console.log('cartItems',cartItems)
     const existIdx = cartItems.findIndex((item) => item.id === Number(id) && item.size === selectedSize);
-    console.log('existingItemIndex',existIdx)
     if (existIdx !== -1) {
       const updatedCartItems = [...cartItems];
       updatedCartItems[existIdx].count += count;
       setCartItems(updatedCartItems);
     } else {
-      const newItem = { id: Number(id), size: selectedSize, count };
-      console.log('newItem',newItem)
+      const newItem = { 
+        id: Number(id), 
+        size: selectedSize, 
+        title: (data !== undefined) ? data.title : `Продукт ${id}`,
+        count,
+        price: (data !== undefined) ? data.price : 0,
+      };
       setCartItems((prevCartItems) => [...prevCartItems, newItem]);
     }
-     // Сохранение корзины в localStorage
-    localStorage.setItem('cartItems', JSON.stringify(cartItems));
-    navigate(CART_ROUTE);
+
+    // задержка на сохранение в localStorage
+    setTimeout(() => {
+      navigate(CART_ROUTE);
+    }, 100);
   }, [id, selectedSize, count, navigate, cartItems]);
 
   return (

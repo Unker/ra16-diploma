@@ -4,20 +4,31 @@ import {
 } from 'react-bootstrap';
 import checkPhoneNumber from '../utils/phone/checkPhoneNumber';
 import { PRODUCT_ROUTE } from '../utils/consts';
+import { ICartItem } from '../components/types';
 import { NavLink } from 'react-router-dom';
 
 const CartPage = () => {
   const [phone, setPhone] = useState('');
   const [phoneValid, setPhoneValid] = useState(true);
-  const [cartItems, setCartItems] = useState<{ id: number; size: string; count: number }[]>([]);
+  const [cartItems, setCartItems] = useState<ICartItem[]>([]);
 
-  useEffect(() => {
+  const readCartItems = () => {
     // Загрузка корзины из localStorage
     const savedCartItems = localStorage.getItem('cartItems');
     if (savedCartItems) {
       setCartItems(JSON.parse(savedCartItems));
     }
+  }
+
+  useEffect(() => {
+    readCartItems();
   }, []);
+
+  const handleRemoveItemFromCart = (id: number) => {
+    const updatedCartItems = cartItems.filter(item => item.id !== id);
+    localStorage.setItem('cartItems', JSON.stringify(updatedCartItems));
+    readCartItems();
+  }
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
@@ -55,32 +66,39 @@ const CartPage = () => {
           </thead>
           <tbody>
             {cartItems?.length > 0 && (
-              cartItems.map(({ id, size, count }, index) => (
-                <tr key={index}>
-                  <td scope="row">{index + 1}</td>
+              <>
+                {cartItems.map(({ id, size, title, count, price }, index) => {
+                  const groupTotalPrice = price * count;
+                  return (
+                    <tr key={index}>
+                      <td scope="row">{index + 1}</td>
+                      <td>
+                        <NavLink className="nav-link" to={`${PRODUCT_ROUTE}/${id}`}>{title}</NavLink>
+                      </td>
+                      <td>{size}</td>
+                      <td>{count}</td>
+                      <td>{price} руб.</td>
+                      <td>{groupTotalPrice} руб.</td>
+                      <td>
+                        <Button
+                          variant="outline-danger"
+                          className="btn-sm"
+                          onClick={() => handleRemoveItemFromCart(id)}
+                        >
+                          Удалить
+                        </Button>
+                      </td>
+                    </tr>
+                  );
+                })}
+                <tr>
+                  <td colSpan={5} className="text-right">Общая стоимость</td>
                   <td>
-                    <NavLink to={`${PRODUCT_ROUTE}/${id}`}>Продукт</NavLink>
-                  </td>
-                  <td>{size}</td>
-                  <td>{count}</td>
-                  <td>34 000 руб.</td>
-                  <td>34 000 руб.</td>
-                  <td>
-                    <Button
-                      variant="outline-danger"
-                      className="btn-sm"
-                      onClick={() => console.log('удалить', id)}
-                    >
-                      Удалить
-                    </Button>
+                    {cartItems.reduce((total, { price, count }) => total + price * count, 0)} руб.
                   </td>
                 </tr>
-              ))
+              </>
             )}
-            <tr>
-              <td colSpan={5} className="text-right">Общая стоимость</td>
-              <td>34 000 руб.</td>
-            </tr>
           </tbody>
         </Table>
       </section>
@@ -108,10 +126,10 @@ const CartPage = () => {
               </Form.Group>
               <Form.Group controlId="address" className="mb-3">
                 <Form.Label>Адрес доставки</Form.Label>
-                <Form.Control type="text" placeholder="Адрес доставки" required/>
+                <Form.Control type="text" placeholder="Адрес доставки" required />
               </Form.Group>
               <Form.Group controlId="agreement" className="mb-3">
-                <Form.Check type="checkbox" label="Согласен с правилами доставки" required/>
+                <Form.Check type="checkbox" label="Согласен с правилами доставки" required />
               </Form.Group>
               <Button variant="outline-secondary" type="submit">Оформить</Button>
             </Form>
