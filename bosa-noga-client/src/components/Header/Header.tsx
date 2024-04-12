@@ -91,8 +91,10 @@ const Header = (): JSX.Element => {
                     className={cn(s.headerControlsPic, s.headerControlsCart)}
                     onClick={() => navigate(CART_ROUTE)}
                   >
-                    {cartItemCount && (
+                    {(cartItemCount && cartItemCount > 0) ? (
                       <div className={s.headerControlsCartFull}>{cartItemCount}</div>
+                    ) : (
+                      <></>
                     )}
                     <div className={s.headerControlsCartMenu}></div>
                   </div>
