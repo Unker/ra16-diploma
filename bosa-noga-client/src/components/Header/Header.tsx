@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import {
   Col,
   Form,
@@ -18,31 +19,23 @@ import {
 } from '../../utils/consts';
 import '../../index.css';
 import s from './Header.module.css';
-import { ICartItem } from '../types';
+import { RootState } from '../../store/store';
 
 const Header = (): JSX.Element => {
+  const cartItems = useSelector((state: RootState) => state.cart);
   const [searchText, setSearchText] = useState('');
   const [searchVisible, setSearchVisible] = useState(false);
   const [cartItemCount, setCartItemCount] = useState<number | undefined>(undefined);
   const navigate = useNavigate();
 
+  const getItemCount = () => {
+    const itemCount = cartItems?.reduce((total, item) => total + item.count, 0);
+    return itemCount;
+  };
+
   useEffect(() => {
-    const handleStorageChange = (e: StorageEvent) => {
-      console.log('header storage event')
-      if (e.key === 'cartItems') {
-        // setCartItemCount(e.newValue?.length);
-        const cartItems = JSON.parse(e.newValue || '[]') as ICartItem[];
-        const itemCount = cartItems.reduce((total, item) => total + item.count, 0);
-        setCartItemCount(itemCount);
-      }
-    };
-
-    window.addEventListener('storage', handleStorageChange);
-
-    return () => {
-      window.removeEventListener('storage', handleStorageChange);
-    };
-  }, []);
+    setCartItemCount(getItemCount());
+  }, [cartItems, getItemCount]);
 
   const redirectToCatalogPage = () => {
     const query = searchText.trim();
@@ -98,7 +91,9 @@ const Header = (): JSX.Element => {
                     className={cn(s.headerControlsPic, s.headerControlsCart)}
                     onClick={() => navigate(CART_ROUTE)}
                   >
-                    {cartItemCount && <div className={s.headerControlsCartFull}>{cartItemCount}</div>}
+                    {cartItemCount && (
+                      <div className={s.headerControlsCartFull}>{cartItemCount}</div>
+                    )}
                     <div className={s.headerControlsCartMenu}></div>
                   </div>
                 </div>

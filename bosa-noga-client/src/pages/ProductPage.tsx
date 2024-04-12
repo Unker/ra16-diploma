@@ -2,18 +2,23 @@ import { useNavigate, useParams } from 'react-router-dom';
 import {
   Button, ButtonGroup, Col, Image, Row, Table,
 } from 'react-bootstrap';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import {
+  useCallback, useEffect, useMemo, useState,
+} from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../store/store';
 import { CART_ROUTE } from '../utils/consts';
 import { useGetItemByIdQuery } from '../api/itemsApi';
 import Preloader from '../components/Preloader/Preloader.tsx';
-import { ICartItem } from '../components/types.ts';
+import { setCartItems } from '../store/cartSlice';
 
 const ProductPage = (): JSX.Element => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [count, setCount] = useState(1);
   const [selectedSize, setSelectedSize] = useState('');
-  const [cartItems, setCartItems] = useState<ICartItem[]>([]);
+  const dispatch = useDispatch();
+  const cartItems = useSelector((state: RootState) => state.cart);
 
   const {
     data,
@@ -41,39 +46,33 @@ const ProductPage = (): JSX.Element => {
   ), [data]);
 
   useEffect(() => {
-    // Загрузка корзины из localStorage
-    const savedCartItems = localStorage.getItem('cartItems');
-    if (savedCartItems) {
-      setCartItems(JSON.parse(savedCartItems));
-    }
-  }, []);
-
-  useEffect(() => {
     localStorage.setItem('cartItems', JSON.stringify(cartItems));
   }, [cartItems]);
 
   const handleOrderProduct = useCallback(() => {
-    const existIdx = cartItems.findIndex((item) => item.id === Number(id) && item.size === selectedSize);
+    const existIdx = cartItems.findIndex(
+      (item) => item.id === Number(id) && item.size === selectedSize,
+    );
     if (existIdx !== -1) {
-      const updatedCartItems = [...cartItems];
-      updatedCartItems[existIdx].count += count;
-      setCartItems(updatedCartItems);
+      const updatedCartItems = cartItems.map((item, index) => {
+        if (index === existIdx) {
+          return { ...item, count: item.count + count };
+        }
+        return item;
+      });
+      dispatch(setCartItems(updatedCartItems));
     } else {
-      const newItem = { 
-        id: Number(id), 
-        size: selectedSize, 
+      const newItem = {
+        id: Number(id),
+        size: selectedSize,
         title: (data !== undefined) ? data.title : `Продукт ${id}`,
         count,
         price: (data !== undefined) ? data.price : 0,
       };
-      setCartItems((prevCartItems) => [...prevCartItems, newItem]);
+      dispatch(setCartItems([...cartItems, newItem]));
     }
-
-    // задержка на сохранение в localStorage
-    setTimeout(() => {
-      navigate(CART_ROUTE);
-    }, 100);
-  }, [id, selectedSize, count, navigate, cartItems]);
+    navigate(CART_ROUTE);
+  }, [id, selectedSize, count, cartItems, data, navigate, dispatch]);
 
   return (
     <>
