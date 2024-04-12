@@ -1,6 +1,6 @@
 // api.ts
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { IItemShort, ICategory, IItemFull } from '../components/types';
+import { IItemShort, ICategory, IItemFull, IOrder } from '../components/types';
 
 interface IGetItemsArgs {
   categoryId?: number | string;
@@ -14,14 +14,14 @@ export const itemsApi = createApi({
   endpoints: (builder) => ({
 
     getCategories: builder.query<ICategory[], void>({
-      query: () => 'api/categories',
+      query: () => '/categories',
     }),
     getTopSales: builder.query<IItemShort[], void>({
-      query: () => 'api/top-sales',
+      query: () => '/top-sales',
     }),
     getItems: builder.query<IItemShort[], IGetItemsArgs>({
       query: ({ categoryId = '', offset = 0, q = '' }) => {
-        // url: `api/items?categoryId=${categoryId}&offset=${offset}&q=${q}`,
+        // url: `/items?categoryId=${categoryId}&offset=${offset}&q=${q}`,
         const queryParams = new URLSearchParams();
 
         if (categoryId) queryParams.append('categoryId', categoryId.toString());
@@ -31,17 +31,28 @@ export const itemsApi = createApi({
         const params = queryParams.toString();
 
         return {
-          url: `api/items${params ? `?${params}` : ''}`,
+          url: `/items${params ? `?${params}` : ''}`,
         };
       },
     }),
     getItemById: builder.query<IItemFull, number>({
-      query: (id) => `api/items/${id}`,
+      query: (id) => `/items/${id}`,
+    }),
+    createOrder: builder.mutation<IOrder, IOrder>({
+      query: (order) => ({
+        url: '/order',
+        method: 'POST',
+        body: order,
+      }),
     }),
   }),
   refetchOnMountOrArgChange: true,
 });
 
 export const {
-  useGetItemsQuery, useGetCategoriesQuery, useGetTopSalesQuery, useGetItemByIdQuery,
+  useGetItemsQuery,
+  useGetCategoriesQuery,
+  useGetTopSalesQuery,
+  useGetItemByIdQuery,
+  useCreateOrderMutation,
 } = itemsApi;

@@ -37,3 +37,15 @@ export interface ICartItem {
   count: number;
   price: number;
 }
+export interface IOrder {
+  owner: {
+    phone: string;
+    address: string;
+  };
+  items: {
+    id: number;
+    price: number;
+    count: number;
+    size: string;
+  }[];
+}

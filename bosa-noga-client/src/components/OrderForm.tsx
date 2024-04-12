@@ -1,10 +1,18 @@
 import React, { useState } from 'react';
 import { Button, Card, Form } from 'react-bootstrap';
+import { useSelector } from 'react-redux';
+import { RootState } from '../store/store';
 import checkPhoneNumber from '../utils/phone/checkPhoneNumber';
+import { useCreateOrderMutation } from '../api/itemsApi';
+import { IOrder } from './types';
 
 const OrderForm = () => {
+  const cartItems = useSelector((state: RootState) => state.cart);
   const [phone, setPhone] = useState('');
+  const [address, setAddress] = useState('');
   const [phoneValid, setPhoneValid] = useState(true);
+
+  const [createOrder, { isLoading, isError }] = useCreateOrderMutation();
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
@@ -12,7 +20,12 @@ const OrderForm = () => {
     setPhoneValid(true);
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    setAddress(value);
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // Проверка валидности номера телефона
     const correctedPhone = checkPhoneNumber(phone);
@@ -21,6 +34,18 @@ const OrderForm = () => {
     if (isValid) {
       setPhone(correctedPhone);
       console.log('Форма отправлена', correctedPhone);
+      try {
+        const order: IOrder = {
+          owner: { phone: correctedPhone, address },
+          items: cartItems.map(item => ({
+            id: item.id, price: item.price, count: item.count, size: item.size,
+          })),
+        };
+        await createOrder(order).unwrap();
+        console.log('Order created successfully!');
+      } catch (error) {
+        console.error('Failed to create order:', error);
+      }
     }
   };
 
@@ -50,7 +75,13 @@ const OrderForm = () => {
               </Form.Group>
               <Form.Group controlId="address" className="mb-3">
                 <Form.Label>Адрес доставки</Form.Label>
-                <Form.Control type="text" placeholder="Адрес доставки" required />
+                <Form.Control
+                  type="text"
+                  placeholder="Адрес доставки"
+                  value={address}
+                  onChange={handleAddressChange}
+                  required
+                />
               </Form.Group>
               <Form.Group controlId="agreement" className="mb-3">
                 <Form.Check type="checkbox" label="Согласен с правилами доставки" required />
