@@ -68,3 +68,14 @@
   outline: none;
   box-shadow: none;
 }
+
+@media (max-width: 992px) {
+  .navBarDisabler {
+    display: none !important;
+  }
+
+  .dropDownEnabler {
+    display: flex !important;
+    margin-right: auto !important;
+  }
+}
