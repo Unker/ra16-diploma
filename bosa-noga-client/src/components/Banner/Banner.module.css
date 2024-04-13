@@ -6,13 +6,33 @@
   position: absolute;
   z-index: 5;
   right: 0;
-  top: 42px;
-  height: 98px;
-  width: 487px;
+  margin-top: 0;
+  top: 50%;
+  transform: translate(0%, -50%);
+  height: 30%;
+  width: 44%;
   font-weight: bold;
-  font-size: 48px;
-  line-height: 98px;
+  font-size: 3em;
+  align-content: center;
   text-align: center;
   color: #FFFFFF;
   background: linear-gradient(270deg, rgba(161, 179, 191, 0.8) 72.59%, rgba(161, 179, 191, 0) 98.05%);
+}
+
+@media (max-width: 992px) {
+  .bannerHeader {
+    font-size: 2em;
+  }
+}
+
+@media (max-width: 768px) {
+  .bannerHeader {
+    font-size: 1.5em;
+  }
+}
+
+@media (max-width: 576px) {
+  .bannerHeader {
+    font-size: 1.0em;
+  }
 }

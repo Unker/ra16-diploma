@@ -2,15 +2,11 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import {
-  Button,
-  Col,
   Form,
   Image,
   Nav,
   NavDropdown,
   Navbar,
-  Offcanvas,
-  Row,
 } from 'react-bootstrap';
 import cn from 'classnames';
 import {
@@ -67,11 +63,9 @@ const Header = (): JSX.Element => {
 
   return (
     <header className='container'>
-      {/* <Row>
-        <Col> */}
       <Navbar className="navbar-expand-sm navbar-light bg-light px-3">
-        <Navbar.Brand>
-          <NavLink className="navbar-brand" to={MAIN_PAGE_ROUTE}>
+        <Navbar.Brand className={s.navbarBrand}>
+          <NavLink to={MAIN_PAGE_ROUTE}>
             <Image src="./img/header-logo.png" alt="Bosa Noga" />
           </NavLink>
         </Navbar.Brand>
@@ -141,8 +135,6 @@ const Header = (): JSX.Element => {
           </div>
         </div>
       </Navbar>
-      {/* </Col>
-      </Row> */}
     </header>
   );
 };

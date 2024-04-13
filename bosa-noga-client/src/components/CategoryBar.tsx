@@ -50,19 +50,19 @@ const CategoryBar = () => {
   }, [isError]);
 
   return (
-    <div className='d-flex flex-direction-row justify-content-center'>
+    <div className='d-flex flex-direction-row justify-content-center mb-4'>
       {(isLoading || isFetching)
         && <Placeholder as={Nav.Link} animation="glow" className='mx-3 mb-4' style={{ width: '60%' }}>
           <Placeholder style={{ width: '100%' }} />
         </Placeholder>
       }
-      <Nav variant="underline">
+      <Nav variant="underline" className='gap-0'>
         {categories && itemsList.map((category) => {
           const isSelected = category.id === selectedCategory ? ' active ' : '';
           return <Nav.Item key={category.id}>
             <Nav.Link
               key={category.id}
-              className={`mx-3 mb-4 ${isSelected}`}
+              className={`mx-3 ${isSelected}`}
               onClick={() => handleSelectCategory(category.id)}
             >
               {category.title}

@@ -70,6 +70,15 @@
 }
 
 @media (max-width: 992px) {
+  .navbarBrand {
+    width: 100px;
+  }
+
+  .navbarBrand img {
+    max-width: 100%;
+    height: auto;
+  }
+  
   .navBarDisabler {
     display: none !important;
   }
