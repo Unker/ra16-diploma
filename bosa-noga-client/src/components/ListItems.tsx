@@ -1,5 +1,4 @@
 import React from 'react';
-import { Row } from 'react-bootstrap';
 import { IItemShort } from './types';
 import Item from './Item.tsx';
 
@@ -8,9 +7,12 @@ interface ItemProps {
 }
 
 const ListItems: React.FC<ItemProps> = ({ itemsList }) => (
-    <Row className='d-flex justify-content-between'>
-      {itemsList.map((item: IItemShort) => <Item key={item.id} item={item} />)}
-    </Row>
+  <div
+    className='d-flex justify-content-center'
+    style={{ flexFlow: 'wrap' }}
+  >
+    {itemsList.map((item: IItemShort) => <Item key={item.id} item={item} />)}
+  </div>
 );
 
 export default ListItems;

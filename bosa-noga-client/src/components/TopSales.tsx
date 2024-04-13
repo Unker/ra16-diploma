@@ -33,12 +33,14 @@ const TopSales = () => {
       {!(isLoading || isFetching) && isError && (
         <div className="text-center">Ошибка получения данных от сервера</div>
       )}
-      {(itemsList?.length > 0)
-        && <Row className='d-flex justify-content-between'>
+      {(itemsList?.length > 0) && (
+        <div
+          className='d-flex justify-content-center'
+          style={{ flexFlow: 'wrap' }}
+        >
           {itemsList.map((item) => <Item key={item.id} item={item} />)}
-        </Row>
-      }
-
+        </div>
+      )}
     </section >
   );
 };

@@ -24,10 +24,10 @@ const Item: React.FC<ItemProps> = ({ item }) => {
 
   return (
     <Card
-      className='mb-4 pt-2 catalog-item-card'
-      style={{ width: '32%' }}
+      className='mb-3 me-4 pt-2 catalog-item-card'
+      style={{ width: '30%', minWidth: '300px', maxWidth: '350px' }}
     >
-      <div className='d-flex flex-column h-100' style={{minHeight: '400px'}}>
+      <div className='d-flex flex-column h-100' style={{ minHeight: '400px' }}>
         {imageLoaded ? (
           <Card.Img
             variant="top"
