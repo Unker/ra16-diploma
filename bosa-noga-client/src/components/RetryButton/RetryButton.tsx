@@ -1,4 +1,4 @@
-import { Button } from "react-bootstrap";
+import { Button } from 'react-bootstrap';
 import s from './RetryButton.module.css';
 
 interface RetryButtonProps {

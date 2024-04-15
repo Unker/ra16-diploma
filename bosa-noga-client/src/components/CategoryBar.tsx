@@ -46,13 +46,13 @@ const CategoryBar = () => {
 
   useEffect(() => {
     let intervalId: NodeJS.Timeout;
-  
+
     if (error) {
       intervalId = setInterval(() => {
         refetch();
       }, 5000);
     }
-  
+
     return () => {
       clearInterval(intervalId);
     };
