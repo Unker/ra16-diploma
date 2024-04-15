@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import {
@@ -27,14 +27,9 @@ const Header = (): JSX.Element => {
   const [cartItemCount, setCartItemCount] = useState<number | undefined>(undefined);
   const navigate = useNavigate();
 
-  const getItemCount = useCallback(
-    () => cartItems.reduce((total, item) => total + item.count, 0),
-    [cartItems],
-  );
-
   useEffect(() => {
-    setCartItemCount(getItemCount());
-  }, [cartItems, getItemCount]);
+    setCartItemCount(cartItems.length);
+  }, [cartItems]);
 
   const redirectToCatalogPage = () => {
     const query = searchText.trim();
