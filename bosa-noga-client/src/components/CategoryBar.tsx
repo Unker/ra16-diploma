@@ -16,8 +16,9 @@ const CategoryBar = () => {
   const {
     data: categories = [],
     isFetching,
-    isError,
     isLoading,
+    error,
+    refetch,
   } = useGetCategoriesQuery();
 
   const categoriesWithAll = useMemo(() => {
@@ -44,10 +45,18 @@ const CategoryBar = () => {
   };
 
   useEffect(() => {
-    if (isError) {
-      // Обработка ошибки
+    let intervalId: NodeJS.Timeout;
+  
+    if (error) {
+      intervalId = setInterval(() => {
+        refetch();
+      }, 5000);
     }
-  }, [isError]);
+  
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [error, refetch]);
 
   return (
     <div className='d-flex flex-direction-row justify-content-center mb-4'>

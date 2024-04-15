@@ -1,0 +1,15 @@
+.reloadAnimation {
+  animation-name: reload;
+  animation-duration: 3s;
+  animation-iteration-count: infinite;
+  margin-bottom: 15px;
+}
+
+@keyframes reload {
+  0% { transform: rotate(0deg); }
+  20% { transform: rotate(2deg); }
+  40% { transform: rotate(-2deg); }
+  60% { transform: rotate(2deg); }
+  80% { transform: rotate(-2deg); }
+  100% { transform: rotate(0deg); }
+}

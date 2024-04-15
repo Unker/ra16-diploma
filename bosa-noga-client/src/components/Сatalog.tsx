@@ -10,6 +10,7 @@ import Preloader from './Preloader/Preloader.tsx';
 import { IItemShort } from './types';
 import { setSearchQuery } from '../store/searchSlice';
 import getRtkErrorMessage from '../utils/getRtkErrorMessage';
+import RetryButton from './RetryButton/RetryButton.tsx';
 
 interface CatalogProps {
   searchComponent?: ReactNode;
@@ -60,6 +61,20 @@ const Catalog: React.FC<CatalogProps> = ({ searchComponent }) => {
     }
   }, [error]);
 
+  useEffect(() => {
+    let intervalId: NodeJS.Timeout;
+
+    if (error) {
+      intervalId = setInterval(() => {
+        refetch();
+      }, 15000);
+    }
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [error, refetch]);
+
   const handleLoadMore = () => {
     setOffset((prevOffset) => prevOffset + countLoadItems);
   };
@@ -72,7 +87,7 @@ const Catalog: React.FC<CatalogProps> = ({ searchComponent }) => {
       <ListItems itemsList={itemsList} />
       {(isLoading || isFetching) && <Preloader />}
       {!(isLoading || isFetching) && isError && (
-        <div className="text-center">Ошибка получения данных от сервера</div>
+        <RetryButton refetch={refetch} />
       )}
       {!(isLoading || isFetching) && (newItemsList?.length === countLoadItems) && (
         <LoadMoreItems

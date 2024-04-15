@@ -1,17 +1,18 @@
 import { useEffect, useMemo } from 'react';
-import { Row } from 'react-bootstrap';
 import Item from './Item.tsx';
 import { useGetTopSalesQuery } from '../api/itemsApi';
 import Preloader from './Preloader/Preloader.tsx';
 import getRtkErrorMessage from '../utils/getRtkErrorMessage';
+import RetryButton from './RetryButton/RetryButton.tsx';
 
 const TopSales = () => {
   const {
     data: topSalesList = [],
     isFetching,
     isError,
-    error,
     isLoading,
+    error,
+    refetch,
   } = useGetTopSalesQuery();
 
   const itemsList = useMemo(() => {
@@ -26,12 +27,26 @@ const TopSales = () => {
     }
   }, [error]);
 
+  useEffect(() => {
+    let intervalId: NodeJS.Timeout;
+
+    if (error) {
+      intervalId = setInterval(() => {
+        refetch();
+      }, 15000);
+    }
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [error, refetch]);
+
   return (
     <section className="top-sales">
       <h2 className="text-center">Хиты продаж!</h2>
       {(isLoading || isFetching) && <Preloader />}
       {!(isLoading || isFetching) && isError && (
-        <div className="text-center">Ошибка получения данных от сервера</div>
+        <RetryButton refetch={refetch} />
       )}
       {(itemsList?.length > 0) && (
         <div

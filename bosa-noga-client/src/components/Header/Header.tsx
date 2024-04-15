@@ -78,8 +78,8 @@ const Header = (): JSX.Element => {
           </Nav>
           <NavDropdown
             title="Навигация"
-            id={`offcanvasNavbarDropdown`}
-            style={{display: 'none', }}
+            id={'offcanvasNavbarDropdown'}
+            style={{ display: 'none' }}
             className={s.dropDownEnabler}
           >
             <NavDropdown.Item>
